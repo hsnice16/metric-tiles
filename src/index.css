@@ -7,3 +7,14 @@
   background-color: #242424;
   padding: 16px;
 }
+
+/* Remove Highcharts watermark */
+text.highcharts-credits {
+  display: none;
+}
+
+@layer utilities {
+  .calc-width {
+    width: calc(100% - 4.5rem);
+  }
+}

@@ -12,7 +12,7 @@ function App() {
       return [];
     }
 
-    return [initialData, initialData, initialData, initialData, initialData];
+    return [initialData, initialData, initialData, initialData];
   }, [initialData, isLoading]);
 
   return (
