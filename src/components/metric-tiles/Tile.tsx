@@ -115,7 +115,7 @@ export function MetricTilesTile({
             </p>
           </div>
 
-          <AreaChart className="flex-1" values={snapshotValues} />
+          <AreaChart className="flex-1 -mr-[14px]" values={snapshotValues} />
         </div>
       </div>
 

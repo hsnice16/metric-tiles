@@ -15,6 +15,6 @@ text.highcharts-credits {
 
 @layer utilities {
   .calc-width {
-    width: calc(100% - 4.5rem);
+    width: calc(100% - 4rem);
   }
 }
