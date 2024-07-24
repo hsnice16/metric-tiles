@@ -32,16 +32,22 @@ export function useInitialData({ metrics, segments }: UseInitialDataParams) {
   }, [segments]);
 
   useEffect(() => {
-    (async function () {
-      const data = await fetchSnapshot({
-        metric: dailyActiveUsersMetric?.id ?? "",
-        segmentKey: indiaCountrySegment?.segmentKey ?? "",
-        segmentId: indiaCountrySegment?.segmentId ?? "",
-      });
+    if (
+      dailyActiveUsersMetric?.id &&
+      indiaCountrySegment?.segmentKey &&
+      indiaCountrySegment?.segmentId
+    ) {
+      (async function () {
+        const data = await fetchSnapshot({
+          metric: dailyActiveUsersMetric.id,
+          segmentKey: indiaCountrySegment.segmentKey ?? "",
+          segmentId: indiaCountrySegment.segmentId ?? "",
+        });
 
-      setIsLoading(false);
-      setInitialData(data as SnapshotData);
-    })();
+        setIsLoading(false);
+        setInitialData(data as SnapshotData);
+      })();
+    }
   }, [
     dailyActiveUsersMetric?.id,
     indiaCountrySegment?.segmentId,

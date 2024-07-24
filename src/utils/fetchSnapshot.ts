@@ -8,11 +8,16 @@ type FetchSnapshotParams = {
   segmentId: string;
 };
 
+export interface SnapshotValue {
+  date: string;
+  value: number;
+}
+
 export interface SnapshotData {
   metric: string;
   segmentKey: string;
   segmentId: string;
-  values: { data: string; value: number }[];
+  values: SnapshotValue[];
 }
 
 export async function fetchSnapshot({

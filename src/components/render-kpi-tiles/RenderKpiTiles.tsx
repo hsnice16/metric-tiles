@@ -36,6 +36,7 @@ export function RenderKpiTiles({
         segmentValue={segmentValue?.displayName ?? ""}
         showingInfoIn={infoIn}
         infoOfLast={kpi.values.length}
+        snapshotValues={kpi.values}
       />
     );
   });

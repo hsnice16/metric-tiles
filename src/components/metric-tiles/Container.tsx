@@ -6,7 +6,7 @@ export interface MetricTilesContainerProps {
 
 export function MetricTilesContainer(props: MetricTilesContainerProps) {
   return (
-    <div className="max-w-4xl rounded-2xl m-auto bg-white overflow-hidden p-4 flex flex-wrap gap-6">
+    <div className="max-w-4xl rounded-2xl m-auto bg-white overflow-hidden p-8 flex flex-wrap gap-6">
       {props.children}
     </div>
   );
