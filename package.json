@@ -12,6 +12,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
+    "classnames": "^2.5.1",
     "highcharts": "^11.4.6",
     "highcharts-react-official": "^3.2.1",
     "postcss": "^8.4.39",

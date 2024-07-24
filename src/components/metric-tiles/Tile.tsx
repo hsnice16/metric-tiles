@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import HighchartsReact from "highcharts-react-official";
-import Highcharts from "highcharts";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { SnapshotValue } from "../../utils";
+import { AreaChart } from "./AreaChart";
+import classNames from "classnames";
 
 export type ShowingInfoIn = "daily" | "weekly" | "monthly";
 
@@ -20,6 +20,52 @@ export function MetricTilesTile({
   infoOfLast,
   snapshotValues,
 }: MetricTilesTileProps) {
+  const tileRef = useRef<HTMLDivElement>(null);
+  const [showRightBorder, setShowRightBorder] = useState(false);
+  const [showTopBorder, setShowTopBorder] = useState(false);
+
+  useLayoutEffect(() => {
+    function setBorder() {
+      if (tileRef.current) {
+        const nextSibling = tileRef.current
+          .nextSibling as HTMLDivElement | null;
+        const previousSibling = tileRef.current
+          .previousSibling as HTMLDivElement | null;
+
+        if (
+          nextSibling !== null &&
+          tileRef.current.offsetLeft < nextSibling.offsetLeft
+        ) {
+          setShowRightBorder(true);
+        } else {
+          setShowRightBorder(false);
+        }
+
+        if (
+          previousSibling !== null &&
+          previousSibling.offsetLeft >= tileRef.current.offsetLeft &&
+          (nextSibling === null ||
+            previousSibling.offsetLeft === tileRef.current.offsetLeft)
+        ) {
+          setShowTopBorder(true);
+        } else {
+          setShowTopBorder(false);
+        }
+      }
+    }
+
+    function handleResize() {
+      setBorder();
+    }
+
+    setBorder();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const metricCount = useMemo(() => {
     switch (showingInfoIn) {
       case "daily":
@@ -31,56 +77,17 @@ export function MetricTilesTile({
     }
   }, [showingInfoIn, infoOfLast]);
 
-  const chatOptionsData = useMemo(() => {
-    const valuesLength = snapshotValues.length;
-    const data = [];
-
-    for (let index = valuesLength - 1; index >= 0; index--) {
-      const value = snapshotValues[index];
-      data.push([value.date, value.value]);
-    }
-
-    return data;
-  }, [snapshotValues]);
-
-  const highChartOptions = useMemo(() => {
-    return {
-      title: {
-        style: {
-          display: "none",
-        },
-      },
-      legend: {
-        enabled: false,
-      },
-      xAxis: {
-        visible: false,
-      },
-      yAxis: {
-        visible: false,
-      },
-      series: [
-        {
-          marker: {
-            enabled: false,
-          },
-          type: "area",
-          data: chatOptionsData,
-          color: "#119F97", // primary
-          fillColor: {
-            linearGradient: { x1: 0.25, x2: 1, y1: 1, y2: 0 },
-            stops: [
-              [0, "#119f9700"],
-              [1, "#119f9775"],
-            ],
-          },
-        },
-      ],
-    };
-  }, [chatOptionsData]);
-
   return (
-    <div className="min-w-56 h-32 text-primaryText flex-1 font-work-sans flex flex-col">
+    <div
+      className={classNames(
+        "min-w-56 h-32 text-primaryText flex-1 font-work-sans flex flex-col border-solid border-darkGray",
+        {
+          "border-r-[0.5px]": showRightBorder,
+          "border-t-[0.5px] pt-4": showTopBorder,
+        }
+      )}
+      ref={tileRef}
+    >
       <h2 className="font-medium text-sm h-10 mr-auto">
         {metric}, {segmentValue}
       </h2>
@@ -102,11 +109,7 @@ export function MetricTilesTile({
           </p>
         </div>
 
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={highChartOptions}
-          containerProps={{ className: "flex-1" }}
-        />
+        <AreaChart className="flex-1" values={snapshotValues} />
       </div>
     </div>
   );
