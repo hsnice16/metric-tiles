@@ -11,7 +11,7 @@ export function MetricTilesTile({ kpi }: MetricTilesTileProps) {
     componentWillHaveLeftBorder: false,
   });
 
-  const { metrics, segments } = useMetricContext();
+  const { metrics, segments, setKpis } = useMetricContext();
   const tileRef = useRef<HTMLDivElement>(null);
 
   const { showRightBorder, showTopBorder, componentWillHaveLeftBorder } = state;
@@ -85,10 +85,26 @@ export function MetricTilesTile({ kpi }: MetricTilesTileProps) {
     return segment?.values.find((value) => value.segmentId === data.segmentId);
   }, [data.segmentId, data.segmentKey, segments]);
 
+  const handleViewModeClick = () => {
+    setKpis((prevKpis) => {
+      return prevKpis.map((prevKpi) => {
+        if (prevKpi._id === _id) {
+          return {
+            ...prevKpi,
+            type: "edit",
+          };
+        }
+
+        return prevKpi;
+      });
+    });
+  };
+
   return (
     <>
       <div
         ref={tileRef}
+        onClick={type === "edit" ? undefined : handleViewModeClick}
         className={classNames(
           "min-w-56 h-32 text-primaryText flex-1 font-work-sans",
           {
@@ -107,6 +123,8 @@ export function MetricTilesTile({ kpi }: MetricTilesTileProps) {
           <EditData
             activeMetricId={metric?.id}
             activeSegmentId={segmentValue?.segmentId}
+            activeSegmentKey={data.segmentKey}
+            kpiId={_id}
           />
         ) : (
           <ViewData

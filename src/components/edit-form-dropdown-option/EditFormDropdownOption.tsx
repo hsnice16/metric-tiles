@@ -4,11 +4,13 @@ import { EditFormDropdownOptionProps } from "../../types";
 export function EditFormDropdownOption({
   children,
   isLast,
+  onClick,
 }: EditFormDropdownOptionProps) {
   return (
     <p
+      onClick={onClick}
       className={classNames(
-        "p-2 w-full hover:bg-gray-100 rounded-lg cursor-pointer",
+        "p-2 w-full hover:bg-gray-100 rounded-lg cursor-pointer flex items-center justify-between gap-1",
         {
           "border-b-[0.5px] border-gray-100 border-solid": !isLast,
         }

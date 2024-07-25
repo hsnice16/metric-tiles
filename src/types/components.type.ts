@@ -28,6 +28,9 @@ export interface EditFormProps extends ChildrenProp {}
 
 export interface EditFormButtonProps {
   type: "add" | "cancel";
+  onClick?: () => void;
+  isLoading?: boolean;
+  isDisabled?: boolean;
 }
 
 // ---------- File: EditFormDropdown.tsx
@@ -42,6 +45,7 @@ export interface EditFormDropdownProps {
 
 export interface EditFormDropdownOptionProps extends ChildrenProp {
   isLast?: boolean;
+  onClick?: () => void;
 }
 
 // ---------- File: EditFormDropdownOptionGroup.tsx
@@ -100,4 +104,6 @@ export interface ViewDataProps {
 export interface EditDataProps {
   activeMetricId?: string;
   activeSegmentId?: string;
+  activeSegmentKey?: string;
+  kpiId: string;
 }

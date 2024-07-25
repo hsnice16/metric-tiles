@@ -21,7 +21,10 @@ export function PlusIcon({
           "translate-x-[120%]": direction === "right" && !parentHasRightBorder,
         }
       )}
-      onClick={onClick}
+      onClick={(event) => {
+        event.stopPropagation();
+        onClick && onClick();
+      }}
     >
       <span className="material-symbols-rounded text-white text-lg">add</span>
     </div>

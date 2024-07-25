@@ -39,13 +39,13 @@ export function ViewData({
 
   const handlePlusClick = (type: "left" | "right") => {
     setKpis((prevKpis) => {
+      const clickedKpiIndex = prevKpis.findIndex((kpi) => kpi._id === kpiId);
       const newKpi = {
         _id: `${Math.random()}-new-kpi`,
         type: "edit",
-        data: {},
+        data: { ...prevKpis[clickedKpiIndex].data },
       } as KpiData;
 
-      const clickedKpiIndex = prevKpis.findIndex((kpi) => kpi._id === kpiId);
       const newMappedPrevKpi = prevKpis.map((kpi) => {
         return {
           ...kpi,
