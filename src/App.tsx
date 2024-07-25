@@ -18,7 +18,7 @@ function App() {
   return (
     <MetricTiles.Container>
       {isLoading ? (
-        <p className="font-medium text-base text-primaryText">
+        <p className="font-medium text-base text-primaryText px-8">
           Fetching initial data...
         </p>
       ) : null}

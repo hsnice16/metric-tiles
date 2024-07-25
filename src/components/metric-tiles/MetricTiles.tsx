@@ -1,5 +1,9 @@
-import { MetricTilesContainer, MetricTilesContainerProps } from "./Container";
-import { MetricTilesTile, MetricTilesTileProps } from "./Tile";
+import {
+  MetricTilesTile,
+  MetricTilesTileProps,
+  MetricTilesContainer,
+  MetricTilesContainerProps,
+} from "../index";
 
 export function MetricTiles() {
   return <></>;
