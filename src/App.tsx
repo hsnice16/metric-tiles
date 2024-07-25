@@ -42,12 +42,15 @@ function App() {
 
             return (
               <MetricTiles.Tile
-                key={`${index}-kpi-snapshot-data`}
+                key={`${
+                  index === 3 ? "edit" : "view"
+                }-${index}-kpi-snapshot-data`}
                 metric={metric?.displayName ?? ""}
                 segmentValue={segmentValue?.displayName ?? ""}
                 showingInfoIn={infoIn}
                 infoOfLast={kpi.values.length}
                 snapshotValues={kpi.values}
+                showEditForm={index === 3}
               />
             );
           })

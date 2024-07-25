@@ -1,7 +1,7 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { SnapshotValue } from "../../utils";
 import classNames from "classnames";
-import { AreaChart, PlusIcon } from "../index";
+import { EditForm, ViewData } from "../index";
 
 export type ShowingInfoIn = "daily" | "weekly" | "monthly";
 
@@ -11,6 +11,7 @@ export interface MetricTilesTileProps {
   showingInfoIn: ShowingInfoIn;
   infoOfLast: number;
   snapshotValues: SnapshotValue[];
+  showEditForm?: boolean;
 }
 
 export function MetricTilesTile({
@@ -19,14 +20,16 @@ export function MetricTilesTile({
   showingInfoIn,
   infoOfLast,
   snapshotValues,
+  showEditForm,
 }: MetricTilesTileProps) {
-  const tileRef = useRef<HTMLDivElement>(null);
-
   const [state, setState] = useState({
     showRightBorder: false,
     showTopBorder: false,
     componentWillHaveLeftBorder: false,
   });
+
+  const tileRef = useRef<HTMLDivElement>(null);
+  const { showRightBorder, showTopBorder, componentWillHaveLeftBorder } = state;
 
   useLayoutEffect(() => {
     function handleResize() {
@@ -83,25 +86,15 @@ export function MetricTilesTile({
     };
   }, []);
 
-  const { showRightBorder, showTopBorder, componentWillHaveLeftBorder } = state;
-  const metricCount = useMemo(() => {
-    switch (showingInfoIn) {
-      case "daily":
-        return `${infoOfLast}d`;
-      case "weekly":
-        return `${infoOfLast}w`;
-      case "monthly":
-        return `${infoOfLast}m`;
-    }
-  }, [showingInfoIn, infoOfLast]);
-
   return (
     <>
       <div
+        ref={tileRef}
         className={classNames(
-          "min-w-56 h-32 text-primaryText flex-1 font-work-sans cursor-pointer [&:hover_.plus-icon]:flex",
+          "min-w-56 h-32 text-primaryText flex-1 font-work-sans",
           {
-            "before:content-[''] before:block before:absolute before:-mt-4 before:calc-width before:border-solid before:border-darkGray before:border-t-[0.5px]":
+            "cursor-pointer [&:hover_.plus-icon]:flex": !showEditForm,
+            "before:content-[''] before:block before:absolute before:-mt-4 before:calc-width before:border-solid before:border-gray-800 before:border-t-[0.5px]":
               showTopBorder,
             "pr-6": showRightBorder,
             "pl-6": componentWillHaveLeftBorder,
@@ -110,44 +103,39 @@ export function MetricTilesTile({
             "px-7": !showRightBorder && !componentWillHaveLeftBorder,
           }
         )}
-        ref={tileRef}
       >
-        <div className="flex flex-col relative h-full w-full">
-          <PlusIcon
-            direction="left"
-            parentHasLeftBorder={componentWillHaveLeftBorder}
-          />
+        {showEditForm ? (
+          <EditForm>
+            <EditForm.Dropdown>
+              <EditForm.DropdownOption>One</EditForm.DropdownOption>
+              <EditForm.DropdownOption>Two</EditForm.DropdownOption>
 
-          <PlusIcon direction="right" parentHasRightBorder={showRightBorder} />
+              <EditForm.DropdownOptionGroup>
+                <EditForm.DropdownOption>Three</EditForm.DropdownOption>
+                <EditForm.DropdownOption>Four</EditForm.DropdownOption>
+              </EditForm.DropdownOptionGroup>
+            </EditForm.Dropdown>
 
-          <h2 className="font-medium text-sm h-10 mr-auto">
-            {metric}, {segmentValue}
-          </h2>
-
-          <div className="flex flex-1 justify-between">
-            <div className="flex flex-col gap-1 self-end">
-              <p className="font-medium text-3xl">52.5K</p>
-              <p className="font-normal text-sm flex items-center">
-                <span className="material-symbols-rounded text-primary text-lg">
-                  arrow_upward_alt
-                </span>
-                3.5%
-                <span className="text-darkGray flex items-center ml-1">
-                  <span className="material-symbols-rounded text-lg -mt-[2px]">
-                    change_history
-                  </span>
-                  {metricCount}
-                </span>
-              </p>
+            <div className="flex justify-between items-center gap-4">
+              <EditForm.Button type="cancel" />
+              <EditForm.Button type="add" />
             </div>
-
-            <AreaChart className="flex-1 -mr-[14px]" values={snapshotValues} />
-          </div>
-        </div>
+          </EditForm>
+        ) : (
+          <ViewData
+            metric={metric}
+            segmentValue={segmentValue}
+            showingInfoIn={showingInfoIn}
+            infoOfLast={infoOfLast}
+            snapshotValues={snapshotValues}
+            parentHasLeftBorder={componentWillHaveLeftBorder}
+            parentHasRightBorder={showRightBorder}
+          />
+        )}
       </div>
 
       {showRightBorder ? (
-        <span className="block h-32 border-solid border-darkGray border-r-[0.5px]" />
+        <span className="block h-32 border-solid border-gray-800 border-r-[0.5px]" />
       ) : null}
     </>
   );
