@@ -1,14 +1,11 @@
 import classNames from "classnames";
-import { ReactNode, useState } from "react";
-
-export interface EditFormDropdownProps {
-  notClickable?: boolean;
-  children?: ReactNode;
-}
+import { useState } from "react";
+import { EditFormDropdownProps } from "../../types";
 
 export function EditFormDropdown({
   notClickable,
   children,
+  title,
 }: EditFormDropdownProps) {
   const [showOptions, setShowOptions] = useState(false);
 
@@ -20,7 +17,7 @@ export function EditFormDropdown({
         { "cursor-pointer": !notClickable }
       )}
     >
-      <p className="font-medium pl-2 pr-2 opacity-80">Daily Active Users</p>
+      <p className="font-medium pl-2 pr-2 opacity-80">{title}</p>
       <span
         className={classNames(
           "transition-transform duration-700 material-symbols-rounded text-gray-800 text-lg",
@@ -37,11 +34,11 @@ export function EditFormDropdown({
       {!notClickable ? (
         <div
           className={classNames(
-            "absolute transition-opacity duration-300 bg-white w-full top-11 left-0 shadow-md rounded-lg p-2 z-20 cursor-auto pointer-events-none border-[0.5px] border-solid border-gray-100",
+            "absolute transition-all duration-300 bg-white w-full top-11 left-0 shadow-md rounded-lg z-20 cursor-auto pointer-events-none border-[0.5px] border-solid border-gray-100 overflow-y-auto",
             {
-              "opacity-100 [&_*]:opacity-100 [&_*]:pointer-events-auto":
+              "opacity-100 [&_*]:opacity-100 [&_*]:pointer-events-auto max-h-80 p-2":
                 showOptions,
-              "opacity-0 [&_*]:opacity-0 [&_*]:pointer-events-none":
+              "opacity-0 [&_*]:opacity-0 [&_*]:pointer-events-none max-h-0 p-0":
                 !showOptions,
             }
           )}

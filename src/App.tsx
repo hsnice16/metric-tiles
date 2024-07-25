@@ -1,61 +1,46 @@
-import { useMemo } from "react";
-import { MetricTiles, ShowingInfoIn } from "./components";
+import { useEffect, useState } from "react";
+import { MetricTiles } from "./components";
 import { useGetMetrics, useGetSegments, useInitialData } from "./hooks";
+import { KpiData } from "./types";
+import { getKpiId } from "./utils";
 
 function App() {
   const metrics = useGetMetrics();
   const segments = useGetSegments();
   const { isLoading, initialData } = useInitialData({ metrics, segments });
+  const [kpis, setKpis] = useState<KpiData[]>([]);
 
-  const kpis = useMemo(() => {
-    if (isLoading || !initialData) {
-      return [];
+  useEffect(() => {
+    if (!isLoading && initialData) {
+      setKpis([
+        {
+          _id: `${Math.random()}-${getKpiId(initialData)}`,
+          type: "view",
+          data: initialData,
+        },
+      ]);
     }
-
-    return [initialData, initialData, initialData, initialData];
   }, [initialData, isLoading]);
 
   return (
-    <MetricTiles.Container>
-      {isLoading ? (
-        <p className="font-medium text-base text-primaryText px-8">
-          Fetching initial data...
-        </p>
-      ) : null}
+    <MetricTiles value={{ metrics, segments, setKpis }}>
+      <MetricTiles.Container>
+        {isLoading ? (
+          <p className="font-medium text-base text-primaryText px-8">
+            Fetching initial data...
+          </p>
+        ) : null}
 
-      {isLoading === false && kpis.length
-        ? kpis.map((kpi, index) => {
-            const metric = metrics.find((metric) => metric.id === kpi.metric);
-            const segment = segments.find(
-              (segment) => segment.segmentKey === kpi.segmentKey
-            );
-            const segmentValue = segment?.values.find(
-              (value) => value.segmentId === kpi.segmentId
-            );
-
-            let infoIn: ShowingInfoIn = "daily";
-            if (kpi.metric?.includes("weekly")) {
-              infoIn = "weekly";
-            } else if (kpi.metric?.includes("monthly")) {
-              infoIn = "monthly";
-            }
-
-            return (
+        {isLoading === false && kpis.length
+          ? kpis.map((kpi) => (
               <MetricTiles.Tile
-                key={`${
-                  index === 3 ? "edit" : "view"
-                }-${index}-kpi-snapshot-data`}
-                metric={metric?.displayName ?? ""}
-                segmentValue={segmentValue?.displayName ?? ""}
-                showingInfoIn={infoIn}
-                infoOfLast={kpi.values.length}
-                snapshotValues={kpi.values}
-                showEditForm={index === 3}
+                key={`${kpi.type === "edit" ? "edit" : "view"}-${kpi._id}`}
+                kpi={kpi}
               />
-            );
-          })
-        : null}
-    </MetricTiles.Container>
+            ))
+          : null}
+      </MetricTiles.Container>
+    </MetricTiles>
   );
 }
 

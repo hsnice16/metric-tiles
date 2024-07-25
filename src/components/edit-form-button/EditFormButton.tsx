@@ -1,8 +1,5 @@
 import classNames from "classnames";
-
-export interface EditFormButtonProps {
-  type: "add" | "cancel";
-}
+import { EditFormButtonProps } from "../../types";
 
 export function EditFormButton({ type }: EditFormButtonProps) {
   return (

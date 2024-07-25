@@ -1,35 +1,21 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import { SnapshotValue } from "../../utils";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
-import { EditForm, ViewData } from "../index";
+import { EditData, ViewData } from "../index";
+import { useMetricContext } from "../../hooks";
+import { MetricTilesTileProps } from "../../types";
 
-export type ShowingInfoIn = "daily" | "weekly" | "monthly";
-
-export interface MetricTilesTileProps {
-  metric: string;
-  segmentValue: string;
-  showingInfoIn: ShowingInfoIn;
-  infoOfLast: number;
-  snapshotValues: SnapshotValue[];
-  showEditForm?: boolean;
-}
-
-export function MetricTilesTile({
-  metric,
-  segmentValue,
-  showingInfoIn,
-  infoOfLast,
-  snapshotValues,
-  showEditForm,
-}: MetricTilesTileProps) {
+export function MetricTilesTile({ kpi }: MetricTilesTileProps) {
   const [state, setState] = useState({
     showRightBorder: false,
     showTopBorder: false,
     componentWillHaveLeftBorder: false,
   });
 
+  const { metrics, segments } = useMetricContext();
   const tileRef = useRef<HTMLDivElement>(null);
+
   const { showRightBorder, showTopBorder, componentWillHaveLeftBorder } = state;
+  const { _id, type, data } = kpi;
 
   useLayoutEffect(() => {
     function handleResize() {
@@ -86,6 +72,19 @@ export function MetricTilesTile({
     };
   }, []);
 
+  const metric = useMemo(
+    () => metrics.find((metric) => metric.id === data.metric),
+    [data.metric, metrics]
+  );
+
+  const segmentValue = useMemo(() => {
+    const segment = segments.find(
+      (segment) => segment.segmentKey === data.segmentKey
+    );
+
+    return segment?.values.find((value) => value.segmentId === data.segmentId);
+  }, [data.segmentId, data.segmentKey, segments]);
+
   return (
     <>
       <div
@@ -93,7 +92,7 @@ export function MetricTilesTile({
         className={classNames(
           "min-w-56 h-32 text-primaryText flex-1 font-work-sans",
           {
-            "cursor-pointer [&:hover_.plus-icon]:flex": !showEditForm,
+            "cursor-pointer [&:hover_.plus-icon]:flex": type !== "edit",
             "before:content-[''] before:block before:absolute before:-mt-4 before:calc-width before:border-solid before:border-gray-800 before:border-t-[0.5px]":
               showTopBorder,
             "pr-6": showRightBorder,
@@ -104,32 +103,21 @@ export function MetricTilesTile({
           }
         )}
       >
-        {showEditForm ? (
-          <EditForm>
-            <EditForm.Dropdown>
-              <EditForm.DropdownOption>One</EditForm.DropdownOption>
-              <EditForm.DropdownOption>Two</EditForm.DropdownOption>
-
-              <EditForm.DropdownOptionGroup>
-                <EditForm.DropdownOption>Three</EditForm.DropdownOption>
-                <EditForm.DropdownOption>Four</EditForm.DropdownOption>
-              </EditForm.DropdownOptionGroup>
-            </EditForm.Dropdown>
-
-            <div className="flex justify-between items-center gap-4">
-              <EditForm.Button type="cancel" />
-              <EditForm.Button type="add" />
-            </div>
-          </EditForm>
+        {type === "edit" ? (
+          <EditData
+            activeMetricId={metric?.id}
+            activeSegmentId={segmentValue?.segmentId}
+          />
         ) : (
           <ViewData
-            metric={metric}
-            segmentValue={segmentValue}
-            showingInfoIn={showingInfoIn}
-            infoOfLast={infoOfLast}
-            snapshotValues={snapshotValues}
+            metric={metric?.displayName ?? ""}
+            metricId={metric?.id}
+            segmentValue={segmentValue?.displayName ?? ""}
+            infoOfLast={data.values?.length}
+            snapshotValues={data.values}
             parentHasLeftBorder={componentWillHaveLeftBorder}
             parentHasRightBorder={showRightBorder}
+            kpiId={_id}
           />
         )}
       </div>

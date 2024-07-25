@@ -1,14 +1,10 @@
-import { ReactNode } from "react";
 import {
   EditFormButton,
   EditFormDropdown,
   EditFormDropdownOption,
   EditFormDropdownOptionGroup,
 } from "../index";
-
-interface EditFormProps {
-  children: ReactNode;
-}
+import { EditFormProps } from "../../types";
 
 export function EditForm({ children }: EditFormProps) {
   return (

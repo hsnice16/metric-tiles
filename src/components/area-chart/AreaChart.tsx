@@ -1,12 +1,7 @@
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import { useMemo } from "react";
-import { SnapshotValue } from "../../utils";
-
-export interface AreaChartProps {
-  className?: string;
-  values: SnapshotValue[];
-}
+import { AreaChartProps } from "../../types";
 
 export function AreaChart({ className, values }: AreaChartProps) {
   const chatOptionsData = useMemo(() => {

@@ -1,15 +1,11 @@
 import classNames from "classnames";
-
-interface PlusIconProps {
-  direction: "left" | "right";
-  parentHasRightBorder?: boolean;
-  parentHasLeftBorder?: boolean;
-}
+import { PlusIconProps } from "../../types";
 
 export function PlusIcon({
   direction,
   parentHasRightBorder,
   parentHasLeftBorder,
+  onClick,
 }: PlusIconProps) {
   return (
     <div
@@ -25,6 +21,7 @@ export function PlusIcon({
           "translate-x-[120%]": direction === "right" && !parentHasRightBorder,
         }
       )}
+      onClick={onClick}
     >
       <span className="material-symbols-rounded text-white text-lg">add</span>
     </div>

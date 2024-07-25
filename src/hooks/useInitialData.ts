@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Metric } from "./useGetMetrics";
-import { Segment } from "./useGetSegments";
-import { fetchSnapshot, SnapshotData } from "../utils";
-
-type UseInitialDataParams = {
-  metrics: Metric[];
-  segments: Segment[];
-};
+import { fetchSnapshot } from "../utils";
+import { SnapshotData, UseInitialDataParams } from "../types";
 
 export function useInitialData({ metrics, segments }: UseInitialDataParams) {
   const [isLoading, setIsLoading] = useState(true);

@@ -1,24 +1,7 @@
 import axios from "axios";
+import { FetchSnapshotParams, SnapshotData } from "../types";
 
 const SNAPSHOT_URL = "https://sundial-fe-interview.vercel.app/api/snapshot";
-
-type FetchSnapshotParams = {
-  metric: string;
-  segmentKey: string;
-  segmentId: string;
-};
-
-export interface SnapshotValue {
-  date: string;
-  value: number;
-}
-
-export interface SnapshotData {
-  metric: string;
-  segmentKey: string;
-  segmentId: string;
-  values: SnapshotValue[];
-}
 
 export async function fetchSnapshot({
   metric,

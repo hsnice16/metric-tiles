@@ -1,8 +1,4 @@
-import { ReactNode } from "react";
-
-export interface MetricTilesContainerProps {
-  children: ReactNode;
-}
+import { MetricTilesContainerProps } from "../../types";
 
 export function MetricTilesContainer(props: MetricTilesContainerProps) {
   return (

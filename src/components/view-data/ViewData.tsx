@@ -1,22 +1,33 @@
 import { useMemo } from "react";
-import { AreaChart, MetricTilesTileProps, PlusIcon } from "../index";
-
-interface ViewDataProps extends MetricTilesTileProps {
-  parentHasLeftBorder: boolean;
-  parentHasRightBorder: boolean;
-}
+import { AreaChart, PlusIcon } from "../index";
+import { InfoIn, KpiData, ViewDataProps } from "../../types";
+import { useMetricContext } from "../../hooks";
+import { getKpiId } from "../../utils";
 
 export function ViewData({
   metric,
+  metricId,
   segmentValue,
-  showingInfoIn,
   infoOfLast,
   snapshotValues,
   parentHasLeftBorder,
   parentHasRightBorder,
+  kpiId,
 }: ViewDataProps) {
+  const { setKpis } = useMetricContext();
+
+  const infoIn: InfoIn = useMemo(() => {
+    if (metricId?.includes("weekly")) {
+      return "weekly";
+    } else if (metricId?.includes("monthly")) {
+      return "monthly";
+    }
+
+    return "daily";
+  }, [metricId]);
+
   const metricCount = useMemo(() => {
-    switch (showingInfoIn) {
+    switch (infoIn) {
       case "daily":
         return `${infoOfLast}d`;
       case "weekly":
@@ -24,13 +35,75 @@ export function ViewData({
       case "monthly":
         return `${infoOfLast}m`;
     }
-  }, [showingInfoIn, infoOfLast]);
+  }, [infoIn, infoOfLast]);
+
+  const handlePlusClick = (type: "left" | "right") => {
+    setKpis((prevKpis) => {
+      const newKpi = {
+        _id: `${Math.random()}-new-kpi`,
+        type: "edit",
+        data: {},
+      } as KpiData;
+
+      const clickedKpiIndex = prevKpis.findIndex((kpi) => kpi._id === kpiId);
+      const newMappedPrevKpi = prevKpis.map((kpi) => {
+        return {
+          ...kpi,
+          _id: `${Math.random()}-${getKpiId(kpi.data)}`,
+        };
+      });
+
+      if (clickedKpiIndex === 0) {
+        if (type === "left") {
+          return [newKpi, ...newMappedPrevKpi];
+        } else {
+          return [newMappedPrevKpi[0], newKpi, ...newMappedPrevKpi.slice(1)];
+        }
+      }
+
+      if (clickedKpiIndex === prevKpis.length - 1) {
+        if (type === "right") {
+          return [...newMappedPrevKpi, newKpi];
+        } else {
+          return [
+            ...newMappedPrevKpi.slice(0, clickedKpiIndex),
+            newKpi,
+            newMappedPrevKpi[clickedKpiIndex],
+          ];
+        }
+      }
+
+      if (type === "left") {
+        return [
+          ...newMappedPrevKpi.slice(0, clickedKpiIndex),
+          newKpi,
+          newMappedPrevKpi[clickedKpiIndex],
+          ...newMappedPrevKpi.slice(clickedKpiIndex + 1),
+        ];
+      }
+
+      return [
+        ...newMappedPrevKpi.slice(0, clickedKpiIndex),
+        newMappedPrevKpi[clickedKpiIndex],
+        newKpi,
+        ...newMappedPrevKpi.slice(clickedKpiIndex + 1),
+      ];
+    });
+  };
 
   return (
     <div className="flex flex-col relative h-full w-full">
-      <PlusIcon direction="left" parentHasLeftBorder={parentHasLeftBorder} />
+      <PlusIcon
+        direction="left"
+        parentHasLeftBorder={parentHasLeftBorder}
+        onClick={() => handlePlusClick("left")}
+      />
 
-      <PlusIcon direction="right" parentHasRightBorder={parentHasRightBorder} />
+      <PlusIcon
+        direction="right"
+        parentHasRightBorder={parentHasRightBorder}
+        onClick={() => handlePlusClick("right")}
+      />
 
       <h2 className="font-medium text-sm h-10 mr-auto">
         {metric}, {segmentValue}
