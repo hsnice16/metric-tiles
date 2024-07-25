@@ -1,5 +1,7 @@
 # Metric Tiles - KPI
 
+![Component Demo](./component-demo.png)
+
 ## Details:
 
 - Each KPI card has two modes:
