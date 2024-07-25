@@ -105,9 +105,9 @@ export function MetricTilesTile({
               showTopBorder,
             "pr-6": showRightBorder,
             "pl-6": componentWillHaveLeftBorder,
-            "pl-8": showRightBorder && !componentWillHaveLeftBorder,
-            "pr-8": !showRightBorder && componentWillHaveLeftBorder,
-            "px-8": !showRightBorder && !componentWillHaveLeftBorder,
+            "pl-7": showRightBorder && !componentWillHaveLeftBorder,
+            "pr-7": !showRightBorder && componentWillHaveLeftBorder,
+            "px-7": !showRightBorder && !componentWillHaveLeftBorder,
           }
         )}
         ref={tileRef}

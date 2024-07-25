@@ -1,30 +1,18 @@
-# React + TypeScript + Vite
+# Metric Tiles - KPI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Details:
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Each KPI card has two modes:
+  - View Mode: Show the data for the selected metric & segment
+  - Edit Mode: Shows the metric and segment selectors.
+- When in View Mode, clicking anywhere should switch to Edit Mode.
+- When In Edit Mode, clicking on the create/save button should switch to View Mode.
+- Add new card:
+  - Show a plus (”+”) icon on both sides of a card on hover.
+  - Clicking on these icons should add a new card in the specific position (left/right).
+  - Newly card should start in Edit Mode.
+- Responsiveness:
+  - The maximum number of cards in a row should be 3 irrespective of the screen width.
+  - Cards should have responsive width, however, all cards should have a fixed min-width. This should be considered when positioning cards in a single row or wrapping to multiple rows.
+  - If the number of cards is less than 3 for a row, the cards should increase their width based on the additional available width.
+  - The container that holds all the cards should be aligned horizontally to the centre of the page. This container should have a max-width assigned as well.
